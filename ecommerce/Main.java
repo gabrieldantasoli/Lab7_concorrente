@@ -16,14 +16,6 @@ public class Main {
             workerThread.start();
         }
 
-        Map<String, Produto> produtos = ecommerce.getProdutos();
-        ExecutorService reabastecimentoThreadPool = Executors.newFixedThreadPool(produtos.size());
-
-        for (String nomeProduto : produtos.keySet()) {
-            ReabastecimentoAutomatico reabastecimento = new ReabastecimentoAutomatico(ecommerce, nomeProduto);
-            reabastecimentoThreadPool.submit(reabastecimento);
-        }
-
         RelatorioDeVendas relatorio = new RelatorioDeVendas(ecommerce);
         Thread relatorioThread = new Thread(relatorio);
         relatorioThread.start();
