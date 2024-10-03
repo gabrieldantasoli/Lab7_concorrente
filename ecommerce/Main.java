@@ -3,7 +3,7 @@ package ecommerce;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Main {
+public class Main { 
     public static void main(String[] args) {
         int capacidadeFila = 100;
         Ecommerce ecommerce = new Ecommerce(capacidadeFila);
