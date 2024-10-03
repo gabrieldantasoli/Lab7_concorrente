@@ -1,5 +1,6 @@
 package ecommerce;
 
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -15,9 +16,13 @@ public class Main {
             workerThread.start();
         }
 
-        ReabastecimentoAutomatico reabastecimento = new ReabastecimentoAutomatico(ecommerce);
-        Thread reabastecimentoThread = new Thread(reabastecimento);
-        reabastecimentoThread.start();
+        Map<String, Produto> produtos = ecommerce.getProdutos();
+        ExecutorService reabastecimentoThreadPool = Executors.newFixedThreadPool(produtos.size());
+
+        for (String nomeProduto : produtos.keySet()) {
+            ReabastecimentoAutomatico reabastecimento = new ReabastecimentoAutomatico(ecommerce, nomeProduto);
+            reabastecimentoThreadPool.submit(reabastecimento);
+        }
 
         RelatorioDeVendas relatorio = new RelatorioDeVendas(ecommerce);
         Thread relatorioThread = new Thread(relatorio);

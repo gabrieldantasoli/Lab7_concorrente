@@ -2,17 +2,32 @@ package ecommerce;
 
 public class ReabastecimentoAutomatico implements Runnable {
     private Ecommerce ecommerce;
+    private String nomeProduto;
 
-    public ReabastecimentoAutomatico(Ecommerce ecommerce) {
+    public ReabastecimentoAutomatico(Ecommerce ecommerce, String nomeProduto) {
         this.ecommerce = ecommerce;
+        this.nomeProduto = nomeProduto;
     }
 
     @Override
     public void run() {
         while (true) {
             try {
-                Thread.sleep(10000);
-                ecommerce.reabastecerEstoque();
+                int quantidadeProduto = ecommerce.getQtdProduto(nomeProduto);
+
+                int tempoMinimo = 3000;
+                int tempoMaximo = 10000;
+                int tempoSleep;
+
+                if (quantidadeProduto > 0) {
+                    tempoSleep = Math.max(tempoMinimo, (tempoMaximo - (quantidadeProduto * 5)));
+                } else {
+                    tempoSleep = tempoMaximo;
+                }
+
+                Thread.sleep(tempoSleep);
+
+                ecommerce.reabastecerEstoque(nomeProduto);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

@@ -1,5 +1,6 @@
 package ecommerce;
 
+import java.util.Map;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -38,19 +39,29 @@ public class Ecommerce {
     }
 
     public void gerarRelatorioDeVendas() {
-        System.out.println("===========================");
+        System.out.println("=================================================================================");
         System.out.println("Relatório de Vendas:");
-        System.out.println("===========================");
+        System.out.println("=================================================================================");
         System.out.println("Pedidos processados: " + pedidosProcessados.get());
         System.out.println("Valor total das vendas: " + valorTotalVendas.get());
         System.out.println("Pedidos rejeitados: " + pedidosRejeitados.get());
-        System.out.println("===========================");
+        System.out.println("=================================================================================");
     }
 
-    public void reabastecerEstoque() {
-        estoque.reabastecer();
+    public void reabastecerEstoque(String nomeProduto) {
+        estoque.reabastecer(nomeProduto);
     }
+
     public PriorityBlockingQueue<Pedido> getFilaDePedidos() {
         return this.filaDePedidos;
+    }
+
+
+    public Map<String, Produto> getProdutos() {
+        return this.estoque.getProdutos();
+    }
+
+    public int getQtdProduto(String nomeProduto) {
+        return this.estoque.getQtdProdutos(nomeProduto);
     }
 }

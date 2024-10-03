@@ -8,7 +8,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class Estoque {
-    private Map<String, Produto> produtos;
+    private Map<String, Produto> produtos; // a incrementação tem que ser feita aqui
     private ReadWriteLock lock;
     private Random random = new Random();
 
@@ -48,6 +48,8 @@ public class Estoque {
                 Produto produtoNoEstoque = produtos.get(produtoDoPedido.getNome());
                 if (produtoNoEstoque != null) {
                     produtoNoEstoque.decrementarQuantidade(produtoDoPedido.getQuantidade());
+
+                    produtoNoEstoque.incrementarVendas(produtoDoPedido.getQuantidade());
                 }
             }
         } finally {
@@ -55,39 +57,28 @@ public class Estoque {
         }
     }
 
-    public void reabastecer() {
+    public void reabastecer(String nomeProduto) {
         Lock writeLock = lock.writeLock();
         writeLock.lock();
         try {
-            int quantidadeAbastecida = 0;
-            int qtdprodutos = 0;
+            Produto produto = produtos.get(nomeProduto);
 
-            for (Produto produto : produtos.values()) {
-                if (produto.getQuantidade() < 10) {
-                    int quantidadeReabastecida = random.nextInt(91) + 10;
-                    produto.decrementarQuantidade(-quantidadeReabastecida);
-                    quantidadeAbastecida += quantidadeReabastecida;
-                    qtdprodutos += 1;
-                }
+            if (produto.getQuantidade() < 10) {
+                int quantidadeReabastecida = random.nextInt(91) + 10;
+                produto.decrementarQuantidade(-quantidadeReabastecida);
+                System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nReabastecimento Inteligente: " + nomeProduto + " reabastecido com " + quantidadeReabastecida + " itens.\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
             }
-
-            System.out.println("Sistema reabastecido com " + quantidadeAbastecida + " itens de " + qtdprodutos + " produtos.");
 
         } finally {
             writeLock.unlock();
         }
     }
 
-    public void exibirEstoque() {
-        Lock readLock = lock.readLock();
-        readLock.lock();
-        try {
-            System.out.println("Estoque atual:");
-            for (Produto produto : produtos.values()) {
-                System.out.println(produto.getNome() + ": " + produto.getQuantidade() + " unidades.");
-            }
-        } finally {
-            readLock.unlock();
-        }
+    public Map<String, Produto> getProdutos() {
+        return produtos;
+    }
+
+    public int getQtdProdutos(String nomeProduto) {
+        return produtos.get(nomeProduto).getVendas();
     }
 }

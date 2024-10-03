@@ -10,7 +10,6 @@ public class Cliente implements Runnable {
     private Random random;
     private int maxPedidos;
     private int pedidosFeitos;
-    private String[] tiposDeProdutos = {"Produto1", "Produto2", "Produto3"};
 
     public Cliente(Ecommerce ecommerce, String nome, int maxPedidos) {
         this.ecommerce = ecommerce;
@@ -30,18 +29,30 @@ public class Cliente implements Runnable {
                 List<Produto> produtosDoPedido = new ArrayList<>();
 
                 for (int i = 0; i < numProdutos; i++) {
-                    String tipoProduto = tiposDeProdutos[random.nextInt(tiposDeProdutos.length)];
+                    String tipoProduto;
+
+                    // Lógica para definir o produto a ser adicionado
+                    int probabilidade = random.nextInt(100); // Gera um número aleatório entre 0 e 99
+
+                    // A lógica abaixo garante que o Produto2 seja o mais vendido, depois o Produto1, e depois o Produto3
+                    if (probabilidade < 50) {
+                        tipoProduto = "Produto2"; // 60% de chance para Produto2
+                    } else if (probabilidade < 90) {
+                        tipoProduto = "Produto1"; // 30% de chance para Produto1
+                    } else {
+                        tipoProduto = "Produto3"; // 10% de chance para Produto3
+                    }
+
                     int preco = (random.nextInt(500) + 100);
                     int quantidade = random.nextInt(3) + 1;
                     produtosDoPedido.add(new Produto(tipoProduto, preco, quantidade));
                 }
 
                 int prioridade = random.nextInt(10) + 1;
-                Pedido pedido = new Pedido(produtosDoPedido, this.nome, pedidosFeitos, prioridade); // prioridade => menor numero = mais rápido deve ser processado
+                Pedido pedido = new Pedido(produtosDoPedido, this.nome, pedidosFeitos, prioridade);
 
                 ecommerce.adicionarPedido(pedido);
                 pedidosFeitos++;
-                System.out.println(".");
 
             } catch (InterruptedException e) {
                 e.printStackTrace();
