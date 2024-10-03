@@ -16,7 +16,7 @@ O sistema utiliza várias threads para processar os pedidos em paralelo, reabast
 
 - **Workers (Threads):** A classe Worker representa os trabalhadores que processam os pedidos retirando-os da fila e verificando a disponibilidade de produtos no estoque.
 
-- [Detalhes sobre os arquivos do projeto]()
+- [Detalhes sobre os arquivos do projeto](./detalhes_arquivos.md)
 
 ## Funcionalidades Principais
 
