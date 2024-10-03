@@ -1,9 +1,9 @@
 package ecommerce;
 
-public class RelatorioDeVendas implements Runnable {
+public class ReabastecimentoAutomático implements Runnable {
     private Ecommerce ecommerce;
 
-    public RelatorioDeVendas(Ecommerce ecommerce) {
+    public ReabastecimentoAutomático(Ecommerce ecommerce) {
         this.ecommerce = ecommerce;
     }
 
@@ -11,8 +11,8 @@ public class RelatorioDeVendas implements Runnable {
     public void run() {
         while (true) {
             try {
-                Thread.sleep(30000);
-                ecommerce.gerarRelatorioDeVendas();
+                Thread.sleep(10000);
+                ecommerce.reabastecerEstoque();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

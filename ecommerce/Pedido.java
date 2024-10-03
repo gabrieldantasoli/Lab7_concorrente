@@ -1,21 +1,31 @@
 package ecommerce;
 
-import java.util.Map;
+import java.util.List;
 
 public class Pedido {
-    private final int idCliente;
-    private final Map<String, Integer> produtos;
+    private List<Produto> produtos;
+    private String nomeCliente;
+    private int numero;
 
-    public Pedido(int idCliente, Map<String, Integer> produtos) {
-        this.idCliente = idCliente;
+    public Pedido(List<Produto> produtos, String nomeCliente, int numero) {
         this.produtos = produtos;
+        this.nomeCliente = nomeCliente;
+        this.numero = numero;
     }
 
-    public int getIdCliente() {
-        return idCliente;
-    }
-
-    public Map<String, Integer> getProdutos() {
+    public List<Produto> getProdutos() {
         return produtos;
+    }
+
+    public int getValorTotal() {
+        return produtos.stream().mapToInt(p -> p.getPreco() * p.getQuantidade()).sum();
+    }
+
+    public String getNomeCliente() {
+        return nomeCliente;
+    }
+
+    public int getNumero() {
+        return numero;
     }
 }
