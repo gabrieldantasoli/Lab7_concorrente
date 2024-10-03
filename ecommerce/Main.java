@@ -1,6 +1,7 @@
 package ecommerce;
 
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -32,9 +33,28 @@ public class Main {
         ExecutorService clienteThreadPool = Executors.newFixedThreadPool(numClientes);
 
         for (int i = 0; i < numClientes; i++) {
+            final int orderId = i;
+
             Cliente cliente = new Cliente(ecommerce, "Cliente-" + i, 10);
-            clienteThreadPool.submit(cliente);
+            
+            clienteThreadPool.submit(() -> {
+
+                Order order = new Order(orderId);
+
+                PaymentProcessor paymentProcessor = new PaymentProcessor();
+                CompletableFuture<Void> future = paymentProcessor.processPayment(order);
+
+                future.thenRun(() -> {
+                    processOrder(order);
+                });
+            });
         }
+
+        clienteThreadPool.shutdown();
+        reabastecimentoThreadPool.shutdown();
+    }
+
+    private static void processOrder(Order order) {
+        System.out.println("Pedido " + order.getId() + " foi processado após a confirmação do pagamento.");
     }
 }
-
