@@ -51,10 +51,6 @@ public class Estoque {
 
                     produtoNoEstoque.incrementarVendas(produtoDoPedido.getQuantidade());
                 }
-
-                if (produtoNoEstoque.getQuantidade() <= 5) {
-                    this.reabastecer(produtoNoEstoque.getNome());
-                }
             }
         } finally {
             writeLock.unlock();
