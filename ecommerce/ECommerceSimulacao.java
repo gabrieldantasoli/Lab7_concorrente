@@ -1,7 +1,7 @@
 package ecommerce;
 
-import java.util.concurrent.*;
 import java.util.*;
+import java.util.concurrent.*;
 
 public class ECommerceSimulacao {
     private static final int CAPACIDADE_FILA = 1000;
