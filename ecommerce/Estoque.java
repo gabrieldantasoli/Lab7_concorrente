@@ -19,9 +19,9 @@ public class Estoque {
     }
 
     private void inicializarEstoque() {
-        produtos.put("Produto1", new Produto("Produto1", 100, 10));
-        produtos.put("Produto2", new Produto("Produto2", 200, 15));
-        produtos.put("Produto3", new Produto("Produto3", 50, 20));
+        produtos.put("Produto1", new Produto("Produto1", 1000, 10));
+        produtos.put("Produto2", new Produto("Produto2", 1000, 15));
+        produtos.put("Produto3", new Produto("Produto3", 1000, 20));
     }
 
     public boolean verificarDisponibilidade(Pedido pedido) {
@@ -64,7 +64,7 @@ public class Estoque {
             Produto produto = produtos.get(nomeProduto);
 
             if (produto.getQuantidade() < 10) {
-                int quantidadeReabastecida = random.nextInt(91) + 10;
+                int quantidadeReabastecida = random.nextInt(990) + 10;
                 produto.decrementarQuantidade(-quantidadeReabastecida);
                 System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\nReabastecimento Inteligente: " + nomeProduto + " reabastecido com " + quantidadeReabastecida + " itens.\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
             }

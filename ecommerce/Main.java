@@ -28,7 +28,7 @@ public class Main {
         Thread relatorioThread = new Thread(relatorio);
         relatorioThread.start();
 
-        int numClientes = 50;
+        int numClientes = 15;
         ExecutorService clienteThreadPool = Executors.newFixedThreadPool(numClientes);
 
         for (int i = 0; i < numClientes; i++) {

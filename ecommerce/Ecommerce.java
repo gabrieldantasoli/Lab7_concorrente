@@ -1,8 +1,11 @@
 package ecommerce;
 
+import java.util.concurrent.Executors;
 import java.util.Map;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Ecommerce {
     private PriorityBlockingQueue<Pedido> filaDePedidos;
@@ -10,6 +13,7 @@ public class Ecommerce {
     private AtomicInteger pedidosProcessados;
     private AtomicInteger valorTotalVendas;
     private AtomicInteger pedidosRejeitados;
+    private ScheduledExecutorService scheduler;
 
     public Ecommerce(int capacidadeFila) {
         this.filaDePedidos = new PriorityBlockingQueue<>(capacidadeFila);
@@ -17,6 +21,7 @@ public class Ecommerce {
         this.pedidosProcessados = new AtomicInteger(0);
         this.valorTotalVendas = new AtomicInteger(0);
         this.pedidosRejeitados = new AtomicInteger(0);
+        this.scheduler = Executors.newScheduledThreadPool(1);
     }
 
     public void adicionarPedido(Pedido pedido) throws InterruptedException {
@@ -30,12 +35,17 @@ public class Ecommerce {
     public void processarPedido(Pedido pedido) {
         if (estoque.verificarDisponibilidade(pedido)) {
             estoque.retirarProdutos(pedido);
-            pedidosProcessados.incrementAndGet();
-            valorTotalVendas.addAndGet(pedido.getValorTotal());
-            System.out.println("PRIORIDADE: " + pedido.getPrioridade() + " <-> Pedido " + pedido.getNumero() + " do Cliente " + pedido.getNomeCliente() + " foi processado");
+            System.out.println("AGUARDANDO PAGAMENTO PARA O PEDIDO: " + pedido.getNumero() + " do Cliente " + pedido.getNomeCliente() + "!");
+            scheduler.schedule(() -> pagamentoConcluido(pedido), 2, TimeUnit.SECONDS);
         } else {
             pedidosRejeitados.incrementAndGet();
-        }
+        }        
+    }
+
+    public void pagamentoConcluido(Pedido pedido) {
+        pedidosProcessados.incrementAndGet();
+        valorTotalVendas.addAndGet(pedido.getValorTotal());
+        System.out.println("PRIORIDADE: " + pedido.getPrioridade() + " <-> Pedido " + pedido.getNumero() + " do Cliente " + pedido.getNomeCliente() + " foi processado");
     }
 
     public void gerarRelatorioDeVendas() {

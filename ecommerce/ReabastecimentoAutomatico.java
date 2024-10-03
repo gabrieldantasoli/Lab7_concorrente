@@ -20,7 +20,7 @@ public class ReabastecimentoAutomatico implements Runnable {
                 int tempoSleep;
 
                 if (quantidadeProduto > 0) {
-                    tempoSleep = Math.max(tempoMinimo, (tempoMaximo - (quantidadeProduto * 5)));
+                    tempoSleep = Math.max(tempoMinimo, (tempoMaximo - (quantidadeProduto * 25)));
                 } else {
                     tempoSleep = tempoMaximo;
                 }

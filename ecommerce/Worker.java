@@ -13,7 +13,7 @@ public class Worker implements Runnable {
             try {
                 Pedido pedido = ecommerce.pegarProximoPedido();
                 ecommerce.processarPedido(pedido);
-                Thread.sleep(2000);
+                Thread.sleep(200);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
