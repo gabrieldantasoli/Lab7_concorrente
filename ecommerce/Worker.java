@@ -1,31 +1,22 @@
 package ecommerce;
 
-import java.util.concurrent.BlockingQueue;
-
 public class Worker implements Runnable {
-    private final BlockingQueue<Pedido> filaPedidos;
-    private final Estoque estoque;
+    private Ecommerce ecommerce;
 
-    public Worker(BlockingQueue<Pedido> filaPedidos, Estoque estoque) {
-        this.filaPedidos = filaPedidos;
-        this.estoque = estoque;
+    public Worker(Ecommerce ecommerce) {
+        this.ecommerce = ecommerce;
     }
 
     @Override
     public void run() {
-        try {
-            while (true) {
-                Pedido pedido = filaPedidos.take(); // Bloqueia até que haja um pedido
-                System.out.println("Processando pedido do Cliente " + pedido.getIdCliente());
-                boolean sucesso = estoque.processarPedido(pedido);
-                if (sucesso) {
-                    System.out.println("Pedido processado com sucesso.");
-                } else {
-                    System.out.println("Pedido rejeitado por falta de estoque.");
-                }
+        while (true) {
+            try {
+                Pedido pedido = ecommerce.pegarProximoPedido();
+                ecommerce.processarPedido(pedido);
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt(); // Marca a thread como interrompida
         }
     }
 }

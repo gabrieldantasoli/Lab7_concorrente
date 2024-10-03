@@ -2,56 +2,92 @@ package ecommerce;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class Estoque {
-    private final Map<String, Integer> produtos = new HashMap<>();
-    private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
+    private Map<String, Produto> produtos;
+    private ReadWriteLock lock;
+    private Random random = new Random();
 
-    public Estoque(Map<String, Integer> estoqueInicial) {
-        this.produtos.putAll(estoqueInicial);
+    public Estoque() {
+        this.produtos = new HashMap<>();
+        this.lock = new ReentrantReadWriteLock();
+        inicializarEstoque();
     }
 
-    public boolean processarPedido(Pedido pedido) {
-        lock.writeLock().lock();
+    private void inicializarEstoque() {
+        produtos.put("Produto1", new Produto("Produto1", 100, 10));
+        produtos.put("Produto2", new Produto("Produto2", 200, 15));
+        produtos.put("Produto3", new Produto("Produto3", 50, 20));
+    }
+
+    public boolean verificarDisponibilidade(Pedido pedido) {
+        Lock readLock = lock.readLock();
+        readLock.lock();
         try {
-            for (Map.Entry<String, Integer> entry : pedido.getProdutos().entrySet()) {
-                String produto = entry.getKey();
-                int quantidadeSolicitada = entry.getValue();
-                int quantidadeEmEstoque = produtos.getOrDefault(produto, 0);
-                
-                if (quantidadeEmEstoque < quantidadeSolicitada) {
-                    System.out.println("Estoque insuficiente para o produto: " + produto);
+            for (Produto produtoDoPedido : pedido.getProdutos()) {
+                Produto produtoNoEstoque = produtos.get(produtoDoPedido.getNome());
+                if (produtoNoEstoque == null || produtoNoEstoque.getQuantidade() < produtoDoPedido.getQuantidade()) {
                     return false;
                 }
             }
-            for (Map.Entry<String, Integer> entry : pedido.getProdutos().entrySet()) {
-                produtos.put(entry.getKey(), produtos.get(entry.getKey()) - entry.getValue());
-            }
             return true;
         } finally {
-            lock.writeLock().unlock();
+            readLock.unlock();
         }
     }
 
-    public void reabastecerEstoque(Map<String, Integer> novosProdutos) {
-        lock.writeLock().lock();
+    public void retirarProdutos(Pedido pedido) {
+        Lock writeLock = lock.writeLock();
+        writeLock.lock();
         try {
-            for (Map.Entry<String, Integer> entry : novosProdutos.entrySet()) {
-                produtos.put(entry.getKey(), produtos.getOrDefault(entry.getKey(), 0) + entry.getValue());
+            for (Produto produtoDoPedido : pedido.getProdutos()) {
+                Produto produtoNoEstoque = produtos.get(produtoDoPedido.getNome());
+                if (produtoNoEstoque != null) {
+                    produtoNoEstoque.decrementarQuantidade(produtoDoPedido.getQuantidade());
+                }
             }
-            System.out.println("Estoque reabastecido.");
         } finally {
-            lock.writeLock().unlock();
+            writeLock.unlock();
         }
     }
 
-    public void imprimirEstoque() {
-        lock.readLock().lock();
+    public void reabastecer() {
+        Lock writeLock = lock.writeLock();
+        writeLock.lock();
         try {
-            System.out.println("Estoque Atual: " + produtos);
+            int quantidadeAbastecida = 0;
+            int qtdprodutos = 0;
+
+            for (Produto produto : produtos.values()) {
+                if (produto.getQuantidade() < 10) {
+                    int quantidadeReabastecida = random.nextInt(91) + 10;
+                    produto.decrementarQuantidade(-quantidadeReabastecida);
+                    quantidadeAbastecida += quantidadeReabastecida;
+                    qtdprodutos += 1;
+                }
+            }
+
+            System.out.println("Sistema reabastecido com " + quantidadeAbastecida + " itens de " + qtdprodutos + " produtos.");
+
         } finally {
-            lock.readLock().unlock();
+            writeLock.unlock();
+        }
+    }
+
+    public void exibirEstoque() {
+        Lock readLock = lock.readLock();
+        readLock.lock();
+        try {
+            System.out.println("Estoque atual:");
+            for (Produto produto : produtos.values()) {
+                System.out.println(produto.getNome() + ": " + produto.getQuantidade() + " unidades.");
+            }
+        } finally {
+            readLock.unlock();
         }
     }
 }

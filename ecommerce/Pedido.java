@@ -1,21 +1,42 @@
 package ecommerce;
 
-import java.util.Map;
+import java.util.List;
 
-public class Pedido {
-    private final int idCliente;
-    private final Map<String, Integer> produtos;
+public class Pedido implements Comparable<Pedido> {
+    private List<Produto> produtos;
+    private String nomeCliente;
+    private int numero;
+    private int prioridade; // prioridade => menor numero = mais rápido deve ser processado.
 
-    public Pedido(int idCliente, Map<String, Integer> produtos) {
-        this.idCliente = idCliente;
+    public Pedido(List<Produto> produtos, String nomeCliente, int numero, int prioridade) {
         this.produtos = produtos;
+        this.nomeCliente = nomeCliente;
+        this.numero = numero;
+        this.prioridade = prioridade;
     }
 
-    public int getIdCliente() {
-        return idCliente;
+    public int getPrioridade() {
+        return prioridade;
     }
 
-    public Map<String, Integer> getProdutos() {
+    @Override
+    public int compareTo(Pedido outroPedido) {
+        return Integer.compare(this.prioridade, outroPedido.getPrioridade());
+    }
+
+    public List<Produto> getProdutos() {
         return produtos;
+    }
+
+    public int getValorTotal() {
+        return produtos.stream().mapToInt(p -> p.getPreco() * p.getQuantidade()).sum();
+    }
+
+    public String getNomeCliente() {
+        return nomeCliente;
+    }
+
+    public int getNumero() {
+        return numero;
     }
 }
