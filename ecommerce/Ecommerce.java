@@ -1,7 +1,5 @@
 package ecommerce;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -51,5 +49,8 @@ public class Ecommerce {
 
     public void reabastecerEstoque() {
         estoque.reabastecer();
+    }
+    public PriorityBlockingQueue<Pedido> getFilaDePedidos() {
+        return this.filaDePedidos;
     }
 }
