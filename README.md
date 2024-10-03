@@ -40,14 +40,19 @@ Implementamos um sistema de reabastecimento inteligente que monitora os produtos
 
 1 - Clone o repositorio:
 ```bash
-git clone <url-do-repositorio>
+git clone https://github.com/gabrieldantasoli/Lab7_concorrente.git
 ```
 
-2. Compile e execute:
+2. Permissão de execução para o script:
 ```bash
-javac ecommerce/*.java
-java ecommerce.ECommerceSimulacao
+chmod +x e_commerce_livre.sh
 ```
+
+3. Execute o script:
+```bash
+./e_commerce_livre.sh
+```
+
 
 # Membros do Grupo
 | [<img src="https://avatars.githubusercontent.com/u/87813261?v=4" width="120px;" /><br /><sub><b>Felipe Gangorra</b></sub><br />121111084](https://github.com/felipegangorra)<br /> | [<img src="https://avatars.githubusercontent.com/u/87827786?v=4 " width="120px;"/><br /><sub><b>Wander Hank</b></sub><br />120211139](https://github.com/wanderhank)<br /> | [<img src="https://avatars.githubusercontent.com/u/96066029?v=4" width="120px;"/><br /><sub><b>Gabriel Dantas</b></sub><br />121110669](https://github.com/gabrieldantasoli)<br /> | [<img src="https://avatars.githubusercontent.com/u/96154109?v=4" width="120px;"/><br /><sub><b>Lucas Lima</b></sub><br />121110517](https://github.com/lucaslimasilvafoligem)<br /> |
