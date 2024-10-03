@@ -15,7 +15,7 @@ public class Main {
             workerThread.start();
         }
 
-        ReabastecimentoAutomático reabastecimento = new ReabastecimentoAutomático(ecommerce);
+        ReabastecimentoAutomatico reabastecimento = new ReabastecimentoAutomatico(ecommerce);
         Thread reabastecimentoThread = new Thread(reabastecimento);
         reabastecimentoThread.start();
 

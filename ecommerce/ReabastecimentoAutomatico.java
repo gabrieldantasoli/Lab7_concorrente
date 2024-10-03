@@ -1,9 +1,9 @@
 package ecommerce;
 
-public class ReabastecimentoAutomático implements Runnable {
+public class ReabastecimentoAutomatico implements Runnable {
     private Ecommerce ecommerce;
 
-    public ReabastecimentoAutomático(Ecommerce ecommerce) {
+    public ReabastecimentoAutomatico(Ecommerce ecommerce) {
         this.ecommerce = ecommerce;
     }
 
